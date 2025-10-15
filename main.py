@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import time
 
-def count_pizza(url):
+def count_pizza(url, lang):
     try:
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -27,13 +27,19 @@ def count_pizza(url):
             script.decompose()
 
         all_text = soup.get_text()
-        pizza_count = len(re.findall(r'пицц[а-яё]*', all_text, re.IGNORECASE))
+        if lang == "eng":
+            pizza_count = len(re.findall(r'pizzas?', all_text, re.IGNORECASE))
+        else:
+            pizza_count = len(re.findall(r'пицц[а-яё]*', all_text, re.IGNORECASE))
 
         for tag in soup.find_all():
             for attr in ['alt', 'title', 'aria-label']:
                 if tag.has_attr(attr):
                     attr_text = tag[attr]
-                    pizza_count += len(re.findall(r'пицц[а-яё]*', attr_text, re.IGNORECASE))
+                    if lang == "eng":
+                        pizza_count += len(re.findall(r'pizzas?', all_text, re.IGNORECASE))
+                    else:
+                        pizza_count += len(re.findall(r'пицц[а-яё]*', all_text, re.IGNORECASE))
         return pizza_count
     
     except Exception as error:
@@ -71,8 +77,6 @@ pizza_art = """
 """
 if __name__ == "__main__":
 
-  url = "https://dodopizza.ru/tver" 
-
   print(pizza_art)
   print("Welcome to the super duper hacker pizza counter!")
   print("                  ███████╗██████╗ ██╗███████╗███████╗ █████╗ ")
@@ -85,9 +89,18 @@ if __name__ == "__main__":
   try:
       choice = input("Start searching pizzas to eat? Y/N\n>>>")
       if choice == "Y":
-          print("Analyzing website...")
-          count = count_pizza(url)
-          print(f"\nAnalys result:\nWord 'pizza' mentions {count} times. Ready to have a meal? :P")
+          print("Select website's language: \n1. English\n2. Russian")
+          lang_sel = input(">>>")
+          if lang_sel == "1":
+              lang = "eng"
+          elif lang_sel == "2":
+              lang = "rus"
+          url = input('Enter website URL (e.g., "https://dodopizza.ru/moscow"):\n')
+          if not url.startswith(("https://", "http://")):
+              url = "https://" + url
+          print("Analyzing website... Please wait.")
+          count = count_pizza(url, lang)
+          print(f"\nAnalysis result:\nWord 'pizza' mentions {count} times. Ready to have a meal? :P")
       elif choice == "N":
           print("See you next time.")
       else:
