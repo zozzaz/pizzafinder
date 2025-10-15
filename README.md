@@ -1,9 +1,9 @@
 # pizzafinder
-find a word "pizza" on websites (english, russian).
+find a word "pizza" on websites (english, russian). tested on websites: 
+  - https://dodopizza.ru/tver
+  - https://tashirpizza.ru/tver
+  - https://pizzeriabrandi.com/
 
-tested on websites: https://dodopizza.ru/tver
-                    https://tashirpizza.ru/tver
-                    https://pizzeriabrandi.com/
 upd 15.10.25 v0.2:
   - added english language
 
